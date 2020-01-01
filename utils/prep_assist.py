@@ -8,7 +8,7 @@ from typing import Dict, Union, List
 
 
 def add_datepart(df: pd.DataFrame, fldname: str, drop: bool =True):
-    '''Add a bunch of datetime-related features to a dataframe
+    """Add a bunch of datetime-related features to a dataframe
     Generated Features list of that column:
         'Year', 'Month', 'Week', 'Day', 'Dayofweek',
         'Dayofyear', 'Is_month_end', 'Is_month_start',
@@ -21,7 +21,7 @@ def add_datepart(df: pd.DataFrame, fldname: str, drop: bool =True):
 
     Returns:
     This function is not returning any parameters.
-    '''
+    """
     fld = df[fldname]
     if not np.issubdtype(fld.dtype, np.datetime64):
         df[fldname] = fld = pd.to_datetime(fld, infer_datetime_format=True)
@@ -73,7 +73,7 @@ def reduce_mem_usage(df, use_float16=False, verbose=True):
 
 def add_isnull_cols(df, col_lst):
     for col in col_lst:
-        df[col+'_null']  = df[col].isnull().astype(np.int8)
+        df[col+'_null'] = df[col].isnull().astype(np.int8)
     return df
 
 
@@ -104,7 +104,7 @@ def percentile(n):
     return percentile_
 
 
-def groupby_test(df: pd.DataFrame,
+def _groupby_command(df: pd.DataFrame,
                  index_col: Union[str, List[str]],
                  val_col: Union[str, List[str]],
                  field_cols: Union[str, List[str]],
@@ -117,7 +117,7 @@ def get_pivot(df: pd.DataFrame,
               commands: List[Dict[str,Union[str,List[str]]]]) -> pd.DataFrame:
     out = pd.DataFrame(df[index_col].unique()).set_index(index_col)
     for cmd in commands:
-        grp = groupby_test(df=df, index_col=index_col, val_col=cmd['val'], field_cols=cmd['col'], agg=cmd['agg'])
+        grp = _groupby_command(df=df, index_col=index_col, val_col=cmd['val'], field_cols=cmd['col'], agg=cmd['agg'])
         grp.columns = ['_'.join([str(c) for c in lst]) for lst in grp.columns]
         out = out.join(grp, how='left')
     return out
